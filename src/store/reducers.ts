@@ -3,16 +3,22 @@ import { createReducer } from 'reduxsauce';
 import { Types, UserTypes } from './actions';
 import INITIAL_STATE from './initialState';
 
-interface GenericAction<T = unknown> {
+interface UserAction {
   type: keyof typeof UserTypes;
-  user?: T;
+  user?: any;
 }
 export interface SetUserReducer {
-  (state: typeof INITIAL_STATE, action: GenericAction<any>): typeof INITIAL_STATE;
+  (state: typeof INITIAL_STATE, action: UserAction): typeof INITIAL_STATE;
 }
 
 const setUser: SetUserReducer = (state, { user }) => {
   if (user) {
+    if (user.name) {
+      const newUser = state.USERS.filter(({ name }) => name === user.name);
+      if (!newUser.length) {
+        state.USERS.push(user);
+      }
+    }
     state.user = user;
   }
   return state;

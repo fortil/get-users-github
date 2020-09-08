@@ -1,10 +1,17 @@
 import { combineEpics, ofType } from 'redux-observable';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
+import { Action } from 'redux';
 import { mergeMap, map, catchError } from 'rxjs/operators';
-import { Types } from './actions';
+import { Types, UserTypes } from './actions';
 
 const gitHubUrl = 'https://api.github.com/users/';
+
+interface IAction extends Action {
+  type: UserTypes.GET_USER;
+  userName: string;
+}
+
 
 const getJSON = (userName: string) =>
   ajax
@@ -16,12 +23,17 @@ const getJSON = (userName: string) =>
       })
     );
 
-const getUsers = (action$: any) => action$.pipe(
+const getUsers = (action$: any, $state: any) => action$.pipe(
   ofType(Types.GET_USER),
-  mergeMap((action: any) => {
-    return getJSON(action.userName).pipe(
-      map((set) => ({ type: Types.SET_USER, user: set }))
-    );
+  mergeMap((action: IAction) => {
+    const user = $state.value.API.USERS.filter(({ login }: { login: string }) => login === action.userName);
+    if (user && user.length) {
+      return of({ type: Types.SET_USER, user: user[0] })
+    } else {
+      return getJSON(action.userName).pipe(
+        map((user) => ({ type: Types.SET_USER, user }))
+      );
+    }
   })
 );;
 

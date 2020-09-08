@@ -1,8 +1,9 @@
 interface IUser { avatar_url: string; location: string; name: string; }
-const user: IUser = {} as IUser;
+const user = {} as IUser;
+const USERS = [] as IUser[];
 
 const INISTIAL_STATE = {
-  USERS: {},
+  USERS,
   user,
   userName: '',
 };

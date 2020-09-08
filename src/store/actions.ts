@@ -7,14 +7,15 @@ export enum UserTypes {
   USERS = 'USERS'
 }
 
-interface ActionsGeneric<T, X = null> extends Action {
+interface ActionsGeneric<T, X = null, Y = null> extends Action {
   type: T;
   userName?: X;
+  user?: Y;
 }
 
 export interface IActions {
   getUser: (userName: string) => ActionsGeneric<UserTypes.GET_USER, typeof userName>;
-  setUser: (user: any) => ActionsGeneric<UserTypes.GET_USER, typeof user>;
+  setUser: (user: any) => ActionsGeneric<UserTypes.GET_USER, undefined, typeof user>;
 }
 
 export const { Types, Creators } = createActions<Record<keyof typeof UserTypes, string>, IActions>({

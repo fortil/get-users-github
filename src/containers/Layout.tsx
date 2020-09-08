@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
     conatiner: {
       paddingRight: 0,
       paddingLeft: 0,
+      maxWidth: 'unset'
     },
     none: {
       display: 'none',
